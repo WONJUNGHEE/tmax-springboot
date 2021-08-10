@@ -1,0 +1,43 @@
+server:
+  port: 8000
+
+spring:
+  application:
+    name: apigateway-serivec
+  cloud:
+    gateway:
+      routes:
+        - id: first-service
+          predicates:
+            - Path=/first-service/**
+          uri: lb://FIRST-SERVICE
+          filters:
+            - AddRequestHeader=first-request, junghee-won
+            - AddResponseHeader=first-response, Hi
+        - id: second-service
+          predicates:
+            - Path=/second-service/**
+          uri: lb://SECOND-SERVICE
+          filters:
+            - AddRequestHeader=second-header, junghee-won
+            - AddResponseHeader=second-response, Hello
+        - id: user-service
+          predicates:
+             - Path=/user-service/**
+          uri: lb://USER-SERVICE
+          filters:
+            - RewritePath=/user-service/(?<segment>.*),/$\{segment}
+        - id: catalog-service
+          uri: lb://CATALOG-SERVICE
+          predicates:
+            - Path=/catalog-service/**
+          filters:
+            - RewritePath=/catalog-service/(?<segment>.*),/$\{segment}
+
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka
