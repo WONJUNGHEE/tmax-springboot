@@ -33,6 +33,12 @@ spring:
             - Path=/catalog-service/**
           filters:
             - RewritePath=/catalog-service/(?<segment>.*),/$\{segment}
+        - id: order-service
+          uri: lb://ORDER-SERVICE
+          predicates:
+            - Path=/order-serivec/**
+          filters:
+            - RewritePath=/order-service/(?<segment>.*),/$\{segment}
 
 
 eureka:
